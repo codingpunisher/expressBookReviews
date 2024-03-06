@@ -51,6 +51,7 @@ regd_users.post("/login", (req,res) => {
 // Add a book review
 regd_users.put("/auth/review/:isbn", (req, res) => {
   const isbn = req.params.isbn;
+  let user = req.session.authorization.username;
   let book = books[isbn];
     
   if (book){
@@ -60,7 +61,7 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
         book["reviews"][u] = newReview;
     }
     books[isbn]=book;
-    res.send(`Book review added`);
+    res.send(`Book review added to isbn ` + isbn + ' by ' + user);
   }else {
     res.send('unable to add review to book ISBN: ' + isbn)
   }
@@ -77,7 +78,7 @@ regd_users.delete("/auth/review/:isbn", (req, res) => {
   if (book){
     if (books[isbn].reviews[user]){
       delete books[isbn].reviews[user];
-      res.send('Book review by ' + user +  ' deleted!'); 
+      res.send('Book review for isbn ' + isbn +  ' by ' + user +  ' deleted!'); 
     }else{
       res.send('Book review by ' + user +  ' does not exist...');
     }
